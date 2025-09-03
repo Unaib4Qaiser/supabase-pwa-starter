@@ -4,6 +4,48 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Safe area support for mobile devices with notches/punch holes */
+@supports (padding: max(0px)) {
+  .pt-safe {
+    padding-top: max(env(safe-area-inset-top), 1rem);
+  }
+  
+  .pb-safe {
+    padding-bottom: max(env(safe-area-inset-bottom), 1rem);
+  }
+  
+  .pl-safe {
+    padding-left: max(env(safe-area-inset-left), 1rem);
+  }
+  
+  .pr-safe {
+    padding-right: max(env(safe-area-inset-right), 1rem);
+  }
+  
+  .px-safe {
+    padding-left: max(env(safe-area-inset-left), 1rem);
+    padding-right: max(env(safe-area-inset-right), 1rem);
+  }
+  
+  .py-safe {
+    padding-top: max(env(safe-area-inset-top), 1rem);
+    padding-bottom: max(env(safe-area-inset-bottom), 1rem);
+  }
+}
+
+/* Ensure full viewport coverage on mobile */
+html, body {
+  height: 100vh;
+  height: 100dvh; /* Dynamic viewport height for mobile browsers */
+}
+
+/* PWA Install prompt positioning for mobile safe areas */
+.pwa-install-prompt {
+  bottom: max(env(safe-area-inset-bottom), 1rem);
+  left: max(env(safe-area-inset-left), 1rem);
+  right: max(env(safe-area-inset-right), 1rem);
+}
+
 html, body, #root { 
   height: 100%; 
 }

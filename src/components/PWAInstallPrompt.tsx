@@ -68,7 +68,7 @@ export function PWAInstallPrompt() {
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
 
   return (
-    <div className="fixed bottom-4 left-4 right-4 bg-slate-800 border border-slate-600 rounded-lg p-4 shadow-lg z-50">
+    <div className="fixed pwa-install-prompt bg-slate-800 border border-slate-600 rounded-lg p-4 shadow-lg z-50">
       <div className="flex items-start justify-between">
         <div className="flex-1">
           <h3 className="text-sm font-medium text-slate-100">

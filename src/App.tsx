@@ -22,8 +22,8 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
-      <header className="sticky top-0 bg-slate-900/80 backdrop-blur border-b border-slate-800">
-        <div className="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
+      <header className="sticky top-0 bg-slate-900/80 backdrop-blur border-b border-slate-800 pt-safe">
+        <div className="max-w-3xl mx-auto px-4 px-safe py-3 flex items-center justify-between">
           <Link to="/" className="font-semibold tracking-wide">Supabase PWA</Link>
           <nav className="flex gap-3 items-center">
             {session ? (

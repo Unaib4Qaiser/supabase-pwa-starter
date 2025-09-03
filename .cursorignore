@@ -1,0 +1,15 @@
+# Cursor ignore file
+# Explicitly NOT ignoring .env files so they can be tracked and edited
+
+# Common patterns to ignore
+node_modules/
+dist/
+build/
+*.log
+.DS_Store
+Thumbs.db
+
+# But NOT ignoring .env files
+!.env
+!.env.local
+!.env.example

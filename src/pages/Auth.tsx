@@ -28,26 +28,26 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center px-4">
+    <div className="min-h-[80vh] flex items-center justify-center px-4 py-8">
       <div className="w-full max-w-md animate-scale-in">
         {/* Header */}
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-glow">
-            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="text-center mb-6 sm:mb-8">
+          <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 shadow-glow">
+            <svg className="w-6 h-6 sm:w-8 sm:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
           </div>
-          <h1 className="text-3xl font-bold text-gradient mb-2">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gradient mb-2">
             {mode === 'signup' ? 'Create Account' : 'Welcome Back'}
           </h1>
-          <p className="text-gray-400">
+          <p className="text-gray-400 text-sm sm:text-base">
             {mode === 'signup' ? 'Join us and start organizing your notes' : 'Sign in to access your notes'}
           </p>
         </div>
 
         {/* Form */}
-        <div className="glass-card p-8 rounded-2xl">
-          <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="glass-card p-6 sm:p-8 rounded-2xl">
+          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
                 Email Address
@@ -59,7 +59,7 @@ export default function Auth() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
                 required
-                className="modern-input w-full px-4 py-3 rounded-xl text-white placeholder-gray-500"
+                className="modern-input w-full px-4 py-3 rounded-xl text-white placeholder-gray-500 text-base"
               />
             </div>
 
@@ -74,7 +74,7 @@ export default function Auth() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter your password"
                 required
-                className="modern-input w-full px-4 py-3 rounded-xl text-white placeholder-gray-500"
+                className="modern-input w-full px-4 py-3 rounded-xl text-white placeholder-gray-500 text-base"
               />
             </div>
 
@@ -87,7 +87,7 @@ export default function Auth() {
             <button
               type="submit"
               disabled={loading}
-              className="modern-button w-full py-3 rounded-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+              className="modern-button w-full py-3 rounded-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 text-sm sm:text-base"
             >
               {loading ? (
                 <>
@@ -104,7 +104,7 @@ export default function Auth() {
           </form>
 
           {/* Mode Toggle */}
-          <div className="mt-6 text-center">
+          <div className="mt-4 sm:mt-6 text-center">
             <p className="text-gray-400 text-sm">
               {mode === 'signup' ? 'Already have an account?' : "Don't have an account?"}
               <button

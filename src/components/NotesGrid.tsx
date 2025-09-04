@@ -22,6 +22,9 @@ export default function NotesGrid() {
   const [copySuccess, setCopySuccess] = useState(false);
   const [conflicts, setConflicts] = useState<OfflineNote[]>([]);
   const [showConflictResolver, setShowConflictResolver] = useState(false);
+  const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
+  const [editTitle, setEditTitle] = useState('');
+  const [editContent, setEditContent] = useState('');
   const user = session?.user;
 
   // Initialize offline storage and load notes
@@ -216,6 +219,57 @@ export default function NotesGrid() {
     [isOnline]
   );
 
+  const updateNote = useCallback(async (id: string) => {
+    if (!editTitle.trim() || !user) return;
+
+    try {
+      if (isOnline) {
+        // Try to update in Supabase first
+        const { data, error } = await supabase
+          .from('notes')
+          .update({
+            title: editTitle.trim(),
+            content: editContent.trim() || 'No description',
+          })
+          .eq('id', id)
+          .select();
+
+        if (!error && data && data[0]) {
+          // Update in offline storage as synced
+          const offlineNote: OfflineNote = {
+            ...(data[0] as Note),
+            updated_at: data[0].inserted_at,
+            is_synced: true,
+            is_deleted: false,
+          };
+          await offlineStorage.saveNote(offlineNote);
+        } else {
+          throw new Error(error?.message || 'Failed to update online');
+        }
+      } else {
+        // Offline: update in local storage only
+        await syncManager.updateOfflineNote(id, editTitle.trim(), editContent.trim() || 'No description', user.id);
+      }
+
+      await loadNotesFromStorage();
+      setEditingNoteId(null);
+      setEditTitle('');
+      setEditContent('');
+    } catch (error) {
+      console.error('Error updating note:', error);
+      // Fallback to offline update
+      try {
+        await syncManager.updateOfflineNote(id, editTitle.trim(), editContent.trim() || 'No description', user.id);
+        await loadNotesFromStorage();
+        setEditingNoteId(null);
+        setEditTitle('');
+        setEditContent('');
+      } catch (offlineError) {
+        alert(`Error updating note: ${offlineError}`);
+      }
+    }
+  }, [editTitle, editContent, user, isOnline]);
+
   const handleConflictResolve = async (resolution: ConflictResolution) => {
     if (!user) return;
 
@@ -389,8 +443,8 @@ export default function NotesGrid() {
           {filteredNotes.map((note, index) => (
             <div
               key={note.id}
-              onClick={() => copyNoteDescription(note.content)}
-              className="glass-card-hover p-4 sm:p-6 rounded-2xl cursor-pointer group animate-fade-in"
+              onClick={() => editingNoteId !== note.id && copyNoteDescription(note.content)}
+              className={`glass-card-hover p-4 sm:p-6 rounded-2xl group animate-fade-in ${editingNoteId === note.id ? 'cursor-default' : 'cursor-pointer'}`}
               style={{ animationDelay: `${index * 100}ms` }}
             >
               {/* Note Header */}
@@ -401,6 +455,20 @@ export default function NotesGrid() {
                   </svg>
                 </div>
                 <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setEditingNoteId(note.id);
+                      setEditTitle(note.title);
+                      setEditContent(note.content);
+                    }}
+                    className="p-1.5 sm:p-2 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 hover:text-blue-300 transition-all duration-200"
+                    title="Edit note"
+                  >
+                    <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                  </button>
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -430,49 +498,92 @@ export default function NotesGrid() {
 
               {/* Note Content */}
               <div className="space-y-2 sm:space-y-3">
-                <h3 className="text-base sm:text-lg font-semibold text-white line-clamp-2 group-hover:text-blue-300 transition-colors">
-                  {note.title}
-                </h3>
-                <p className="text-gray-400 text-sm leading-relaxed line-clamp-4 sm:line-clamp-3">
-                  {note.content}
-                </p>
+                {editingNoteId === note.id ? (
+                  <>
+                    <input
+                      type="text"
+                      value={editTitle}
+                      onChange={(e) => setEditTitle(e.target.value)}
+                      className="w-full px-3 py-2 bg-gray-700/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="Note title..."
+                      autoFocus
+                    />
+                    <textarea
+                      value={editContent}
+                      onChange={(e) => setEditContent(e.target.value)}
+                      className="w-full px-3 py-2 bg-gray-700/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                      placeholder="Note content..."
+                      rows={3}
+                    />
+                  </>
+                ) : (
+                  <>
+                    <h3 className="text-base sm:text-lg font-semibold text-white line-clamp-2 group-hover:text-blue-300 transition-colors">
+                      {note.title}
+                    </h3>
+                    <p className="text-gray-400 text-sm leading-relaxed line-clamp-4 sm:line-clamp-3">
+                      {note.content}
+                    </p>
+                  </>
+                )}
               </div>
 
               {/* Note Footer */}
-              <div className="flex items-center justify-between mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-gray-700/50">
-                <span className="text-xs text-gray-500">
-                  {new Date(note.inserted_at).toLocaleDateString('en-US', {
-                    month: 'short',
-                    day: 'numeric',
-                    year: 'numeric'
-                  })}
-                </span>
-                <div className="flex items-center gap-2">
-                  {/* Mobile Delete Button - Always visible on mobile */}
+              {editingNoteId === note.id ? (
+                <div className="flex gap-2 mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-gray-700/50">
                   <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setDeleteConfirmId(note.id);
-                    }}
-                    className="sm:hidden p-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 transition-all duration-200"
-                    title="Delete note"
+                    onClick={() => updateNote(note.id)}
+                    className="flex-1 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium text-sm"
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
+                    Save
                   </button>
+                  <button
+                    onClick={() => {
+                      setEditingNoteId(null);
+                      setEditTitle('');
+                      setEditContent('');
+                    }}
+                    className="flex-1 px-3 py-2 bg-gray-600 hover:bg-gray-700 text-gray-300 rounded-lg transition-colors font-medium text-sm"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              ) : (
+                <div className="flex items-center justify-between mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-gray-700/50">
+                  <span className="text-xs text-gray-500">
+                    {new Date(note.inserted_at).toLocaleDateString('en-US', {
+                      month: 'short',
+                      day: 'numeric',
+                      year: 'numeric'
+                    })}
+                  </span>
+                  <div className="flex items-center gap-2">
+                    {/* Mobile Delete Button - Always visible on mobile */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setDeleteConfirmId(note.id);
+                      }}
+                      className="sm:hidden p-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 transition-all duration-200"
+                      title="Delete note"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                    </button>
 
-                  {/* Sync Status */}
-                  <div className="flex items-center gap-1">
-                    {!note.is_synced && (
-                      <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse" title="Not synced" />
-                    )}
-                    {note.is_synced && (
-                      <div className="w-2 h-2 bg-green-500 rounded-full" title="Synced" />
-                    )}
+                    {/* Sync Status */}
+                    <div className="flex items-center gap-1">
+                      {!note.is_synced && (
+                        <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse" title="Not synced" />
+                      )}
+                      {note.is_synced && (
+                        <div className="w-2 h-2 bg-green-500 rounded-full" title="Synced" />
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
           ))}
         </div>

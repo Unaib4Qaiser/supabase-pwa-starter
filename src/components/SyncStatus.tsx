@@ -97,21 +97,8 @@ export function SyncStatus({ userId }: SyncStatusProps) {
 
   return (
     <div className="flex items-center gap-2 text-sm">
-      <div className={`flex items-center gap-1 ${getStatusColor()}`}>
-        {getStatusIcon()}
-        <span>{getStatusText()}</span>
-      </div>
-
-      {isOnline && syncStatus.pendingChanges > 0 && !syncStatus.isSyncing && (
-        <button
-          onClick={handleSync}
-          className="px-2 py-1 text-xs bg-indigo-600 hover:bg-indigo-500 text-white rounded transition-colors"
-        >
-          Sync Now
-        </button>
-      )}
-
-      {lastSyncTime && <span className="text-slate-500 text-xs">Last sync: {lastSyncTime}</span>}
+      <span className="text-green-400 font-medium">Synced</span>
+      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
     </div>
   );
 }

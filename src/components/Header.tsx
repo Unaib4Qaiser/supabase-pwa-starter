@@ -6,7 +6,7 @@ export default function Header() {
   const { session } = useSession();
 
   return (
-    <header className="sticky top-0 z-50 glass-card border-b border-gray-800/50 pt-safe animate-slide-in">
+    <header className="sticky top-0 z-50 glass-card border-b border-gray-800/50 pt-0 animate-slide-in">
       <div className="max-w-7xl mx-auto px-6 px-safe py-1 sm:py-2">
         <div className="flex items-center justify-between">
           {/* Logo/Brand */}

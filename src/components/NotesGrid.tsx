@@ -274,7 +274,7 @@ export default function NotesGrid() {
   }
 
   return (
-    <div className="space-y-8 animate-fade-in">
+    <div className="space-y-4 sm:space-y-6 animate-fade-in">
       {/* Header */}
       <div>
         <div>
@@ -458,13 +458,30 @@ export default function NotesGrid() {
                     year: 'numeric'
                   })}
                 </span>
-                <div className="flex items-center gap-1">
-                  {!note.is_synced && (
-                    <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse" title="Not synced" />
-                  )}
-                  {note.is_synced && (
-                    <div className="w-2 h-2 bg-green-500 rounded-full" title="Synced" />
-                  )}
+                <div className="flex items-center gap-2">
+                  {/* Mobile Delete Button - Always visible on mobile */}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setDeleteConfirmId(note.id);
+                    }}
+                    className="sm:hidden p-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 transition-all duration-200"
+                    title="Delete note"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  </button>
+
+                  {/* Sync Status */}
+                  <div className="flex items-center gap-1">
+                    {!note.is_synced && (
+                      <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse" title="Not synced" />
+                    )}
+                    {note.is_synced && (
+                      <div className="w-2 h-2 bg-green-500 rounded-full" title="Synced" />
+                    )}
+                  </div>
                 </div>
               </div>
             </div>

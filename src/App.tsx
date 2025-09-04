@@ -21,9 +21,9 @@ export default function App() {
   }, [session, loading, location.pathname, navigate]);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100">
+    <div className="min-h-screen bg-gray-950 text-white">
       <Header />
-      <main className="max-w-3xl mx-auto px-4 py-6">
+      <main className="max-w-7xl mx-auto px-6 py-8">
         <Outlet />
       </main>
       <PWAInstallPrompt />

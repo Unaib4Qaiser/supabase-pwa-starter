@@ -331,7 +331,7 @@ export default function NotesGrid() {
     <div className="animate-fade-in">
 
       {/* Search Bar */}
-      <div className="relative max-w-2xl">
+      <div className="relative max-w-2xl mx-auto">
         <input
           type="text"
           value={searchQuery}
@@ -439,7 +439,7 @@ export default function NotesGrid() {
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4 sm:gap-6">
           {filteredNotes.map((note, index) => (
             <div
               key={note.id}

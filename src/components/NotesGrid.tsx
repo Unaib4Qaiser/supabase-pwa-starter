@@ -444,7 +444,7 @@ export default function NotesGrid() {
             <div
               key={note.id}
               onClick={() => editingNoteId !== note.id && copyNoteDescription(note.content)}
-              className={`glass-card-hover p-4 sm:p-6 rounded-2xl group animate-fade-in ${editingNoteId === note.id ? 'cursor-default' : 'cursor-pointer'}`}
+              className={`glass-card-hover p-4 sm:p-6 rounded-2xl group animate-fade-in select-none ${editingNoteId === note.id ? 'cursor-default' : 'cursor-pointer'}`}
               style={{ animationDelay: `${index * 100}ms` }}
             >
               {/* Note Header */}

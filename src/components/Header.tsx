@@ -7,7 +7,7 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 glass-card border-b border-gray-800/50 pt-safe animate-slide-in">
-      <div className="max-w-7xl mx-auto px-6 px-safe py-4">
+      <div className="max-w-7xl mx-auto px-6 px-safe py-2">
         <div className="flex items-center justify-between">
           {/* Logo/Brand */}
           <Link

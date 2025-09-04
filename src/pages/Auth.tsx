@@ -1,35 +1,37 @@
-import { useState } from 'react'
-import { supabase } from '../lib/supabase'
+import { useState } from 'react';
+import { supabase } from '../lib/supabase';
 
 export default function Auth() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [mode, setMode] = useState<'signin' | 'signup'>('signin')
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [mode, setMode] = useState<'signin' | 'signup'>('signin');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError(null)
-    setLoading(true)
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
     try {
       if (mode === 'signup') {
-        const { error } = await supabase.auth.signUp({ email, password })
-        if (error) throw error
+        const { error } = await supabase.auth.signUp({ email, password });
+        if (error) throw error;
       } else {
-        const { error } = await supabase.auth.signInWithPassword({ email, password })
-        if (error) throw error
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) throw error;
       }
-    } catch (err: any) {
-      setError(err.message || 'Something went wrong')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="max-w-sm mx-auto">
-      <h1 className="text-2xl font-semibold mb-4">{mode === 'signup' ? 'Create account' : 'Welcome back'}</h1>
+      <h1 className="text-2xl font-semibold mb-4">
+        {mode === 'signup' ? 'Create account' : 'Welcome back'}
+      </h1>
       <form onSubmit={handleSubmit} className="space-y-3">
         <input
           type="email"
@@ -51,7 +53,7 @@ export default function Auth() {
           disabled={loading}
           className="w-full px-3 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50"
         >
-          {loading ? 'Please wait…' : (mode === 'signup' ? 'Sign up' : 'Sign in')}
+          {loading ? 'Please wait…' : mode === 'signup' ? 'Sign up' : 'Sign in'}
         </button>
       </form>
 
@@ -61,15 +63,19 @@ export default function Auth() {
         {mode === 'signup' ? (
           <span>
             Already have an account?{' '}
-            <button onClick={() => setMode('signin')} className="text-indigo-400 hover:underline">Sign in</button>
+            <button onClick={() => setMode('signin')} className="text-indigo-400 hover:underline">
+              Sign in
+            </button>
           </span>
         ) : (
           <span>
             New here?{' '}
-            <button onClick={() => setMode('signup')} className="text-indigo-400 hover:underline">Create an account</button>
+            <button onClick={() => setMode('signup')} className="text-indigo-400 hover:underline">
+              Create an account
+            </button>
           </span>
         )}
       </div>
     </div>
-  )
+  );
 }

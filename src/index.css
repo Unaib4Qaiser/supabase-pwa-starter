@@ -9,24 +9,24 @@
   .pt-safe {
     padding-top: max(env(safe-area-inset-top), 1rem);
   }
-  
+
   .pb-safe {
     padding-bottom: max(env(safe-area-inset-bottom), 1rem);
   }
-  
+
   .pl-safe {
     padding-left: max(env(safe-area-inset-left), 1rem);
   }
-  
+
   .pr-safe {
     padding-right: max(env(safe-area-inset-right), 1rem);
   }
-  
+
   .px-safe {
     padding-left: max(env(safe-area-inset-left), 1rem);
     padding-right: max(env(safe-area-inset-right), 1rem);
   }
-  
+
   .py-safe {
     padding-top: max(env(safe-area-inset-top), 1rem);
     padding-bottom: max(env(safe-area-inset-bottom), 1rem);
@@ -34,7 +34,8 @@
 }
 
 /* Ensure full viewport coverage on mobile */
-html, body {
+html,
+body {
   height: 100vh;
   height: 100dvh; /* Dynamic viewport height for mobile browsers */
 }
@@ -46,8 +47,10 @@ html, body {
   right: max(env(safe-area-inset-right), 1rem);
 }
 
-html, body, #root { 
-  height: 100%; 
+html,
+body,
+#root {
+  height: 100%;
 }
 
 /* Performance optimizations */
@@ -63,7 +66,7 @@ html, body, #root {
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
   }
-  
+
   body {
     font-synthesis: none;
     text-size-adjust: 100%;
@@ -78,15 +81,15 @@ html, body, #root {
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 150ms;
   }
-  
+
   .will-change-transform {
     will-change: transform;
   }
-  
+
   .will-change-opacity {
     will-change: opacity;
   }
-  
+
   .gpu-accelerated {
     transform: translateZ(0);
     backface-visibility: hidden;
@@ -99,7 +102,7 @@ html, body, #root {
   * {
     scroll-behavior: smooth;
   }
-  
+
   @media (prefers-reduced-motion: reduce) {
     * {
       scroll-behavior: auto;
@@ -115,7 +118,7 @@ html, body, #root {
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
-  
+
   .line-clamp-3 {
     display: -webkit-box;
     -webkit-line-clamp: 3;

@@ -1,5 +1,5 @@
-import NotesGrid from '../components/NotesGrid'
+import NotesGrid from '../components/NotesGrid';
 
 export default function Home() {
-  return <NotesGrid />
+  return <NotesGrid />;
 }

@@ -3,6 +3,7 @@
 A minimal **PWA** boilerplate with **Supabase Auth** (email/password) and a realtime **Notes** example.
 
 ## Features
+
 - Vite + React + TypeScript
 - Tailwind CSS
 - PWA via `vite-plugin-pwa` (service worker + manifest)
@@ -20,6 +21,7 @@ pnpm dev
 ```
 
 Build:
+
 ```bash
 pnpm build && pnpm preview
 ```
@@ -54,6 +56,7 @@ create policy "Owners can delete own notes" on public.notes
 ```
 
 ## Folder Structure
+
 ```
 public/
   icons/
@@ -65,6 +68,7 @@ src/
 ```
 
 ## Notes
+
 - The service worker is auto-generated; it precaches build assets and enables offline shell.
 - For custom caching strategies, tweak `VitePWA()` options in `vite.config.ts`.
 - Replace placeholder icons in `public/icons/` with your own.

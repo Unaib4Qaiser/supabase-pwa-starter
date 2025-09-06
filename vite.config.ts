@@ -44,8 +44,9 @@ export default defineConfig({
       },
     }),
     VitePWA({
-      registerType: 'autoUpdate',
+      registerType: 'prompt',
       includeAssets: ['icons/icon-192.png', 'icons/icon-512.png'],
+      manifestFilename: 'manifest.json',
       manifest: {
         name: 'Supabase PWA Starter',
         short_name: 'PWA Starter',

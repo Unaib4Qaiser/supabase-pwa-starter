@@ -5,6 +5,18 @@ import './index.css';
 import App from './App';
 import { ErrorBoundary } from './components/ErrorBoundary';
 
+// Register service worker for PWA using VitePWA
+import { registerSW } from 'virtual:pwa-register';
+
+const updateSW = registerSW({
+  onNeedRefresh() {
+    console.log('New content available, please refresh.');
+  },
+  onOfflineReady() {
+    console.log('App is ready for offline use.');
+  },
+});
+
 // Lazy load pages
 const Home = lazy(() => import('./pages/Home'));
 const Auth = lazy(() => import('./pages/Auth'));
